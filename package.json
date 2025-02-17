@@ -1,0 +1,17 @@
+{
+  "name": "express-payments-api",
+  "version": "1.0.0",
+  "description": "A simple Express API for handling payments",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
