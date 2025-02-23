@@ -2,9 +2,10 @@
   "name": "express-payments-api",
   "version": "1.0.0",
   "description": "A simple Express API for handling payments",
-  "main": "server.js",
+  "main": "userserver.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon userserver.js",
+    "watch": "nodemon userserver.js --ext js,html"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -13,5 +14,8 @@
   },
   "engines": {
     "node": ">=16"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }

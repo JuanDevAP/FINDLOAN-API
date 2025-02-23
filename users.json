@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "ssn": "2122",
+    "lastname": "qqqq",
+    "email": "a@a.a",
+    "token": "e3136a171ea1b2301363f4562b4cf5cc",
+    "createdAt": "2025-02-22T18:59:15.474Z"
+  },
+  {
+    "id": 2,
+    "ssn": "1111",
+    "lastname": "mafe",
+    "email": "mafe@mafe.mafe",
+    "token": "f235efa9b86d7498d0213ed6cbfcf847",
+    "createdAt": "2025-02-22T22:07:32.364Z"
+  },
+  {
+    "id": 3,
+    "ssn": "2122",
+    "lastname": "qqqqs",
+    "email": "a@a.a",
+    "token": "3e881c4e0dcdd385db8ae55b03c31f82",
+    "createdAt": "2025-02-22T22:17:48.161Z"
+  },
+  {
+    "id": 4,
+    "ssn": "1234",
+    "lastname": "doe",
+    "email": "jane@doe.com",
+    "token": "b51ec5115a7273c38adcb45ce8ea98de",
+    "createdAt": "2025-02-22T22:18:21.837Z"
+  },
+  {
+    "id": 5,
+    "ssn": "1111",
+    "lastname": "test",
+    "email": "test@test.com",
+    "token": "5c65fec050efdca5545518a81f1b7ae3",
+    "createdAt": "2025-02-22T22:58:08.641Z"
+  }
+]

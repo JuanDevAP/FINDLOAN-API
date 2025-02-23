@@ -4,31 +4,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Dashboard</title>
+    <title>User Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-            height: 100vh;
-            background-color: #f5f5f5;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fa;
             margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         .container {
-            width: 80%;
+            width: 90%;
             max-width: 800px;
-            background: #FFFFFF;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         h2 {
             text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
         }
 
         table {
@@ -39,9 +77,9 @@
 
         th,
         td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: center;
+            border: 1px solid #ddd;
         }
 
         th {
@@ -49,51 +87,17 @@
             color: white;
         }
 
-        form {
-            margin-bottom: 20px;
-        }
+        @media (max-width: 600px) {
 
-        input,
-        button {
-            padding: 10px;
-            margin: 5px;
-            font-size: 16px;
-            max-width: 20%;
-            min-width: 20%;
-            border-radius: 8px;
-        }
+            input,
+            button {
+                font-size: 14px;
+            }
 
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input[type="number"] {
-            --moz-appearance: textfield;
-            /* Firefox */
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            max-width: 20%;
-            min-width: 20%;
-
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #loanForm {
-            display: flex;
-
-            width: 100%;
-            max-width: 100%;
-            justify-content: space-between;
+            th,
+            td {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -101,18 +105,18 @@
 <body>
 
     <div class="container">
-        <h2>Loan Dashboard</h2>
+        <h2>User Dashboard</h2>
 
-        <!-- Loan Submission Form -->
-        <form id="loanForm">
+        <!-- User Submission Form -->
+        <form id="userForm">
             <input type="number" id="ssn" placeholder="Enter SSN" required maxlength="4" oninput="limitSSN(this)">
             <input type="text" id="lastname" placeholder="Enter Last Name" required pattern="[A-Za-z]+"
                 title="Only letters allowed">
             <input type="email" id="email" placeholder="Enter Email" required>
-            <button type="submit">Add Loan</button>
+            <button type="submit">Add User</button>
         </form>
 
-        <!-- Loans Table -->
+        <!-- Users Table -->
         <table>
             <thead>
                 <tr>
@@ -120,13 +124,14 @@
                     <th>SSN</th>
                     <th>Lastname</th>
                     <th>Email</th>
-                    <th>Status</th>
+                    <th>Token</th>
                     <th>Created At</th>
+                    <th>Actions</th> <!-- New column for actions -->
                 </tr>
             </thead>
-            <tbody id="loansTable">
+            <tbody id="usersTable">
                 <tr>
-                    <td colspan="6">Loading...</td>
+                    <td colspan="7">Loading...</td>
                 </tr>
             </tbody>
         </table>
@@ -150,40 +155,40 @@
         document.getElementById('lastname').addEventListener('input', function () {
             limitLastname(this);
         });
-        const apiUrl = '/api/loans'; // Update this if your API URL is different
 
-        // Fetch loans from the API and populate the table
-        async function fetchLoans() {
+        const apiUrl = '/api/users';
+
+        async function fetchUsers() {
             try {
                 const response = await fetch(apiUrl);
-                const loans = await response.json();
-                const tableBody = document.getElementById('loansTable');
+                const users = await response.json();
+                const tableBody = document.getElementById('usersTable');
                 tableBody.innerHTML = '';
 
-                if (loans.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="6">No loans found.</td></tr>';
+                if (users.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="7">No users found.</td></tr>';
                     return;
                 }
 
-                loans.forEach(loan => {
+                users.forEach(user => {
                     const row = `<tr>
-                        <td>${loan.id}</td>
-                        <td>${loan.ssn}</td>
-                        <td>${loan.lastname}</td>
-                        <td>${loan.email}</td>
-                        <td>${loan.status}</td>
-                        <td>${new Date(loan.createdAt).toLocaleString()}</td>
-                    </tr>`;
+                    <td>${user.id}</td>
+                    <td>${user.ssn}</td>
+                    <td>${user.lastname}</td>
+                    <td>${user.email}</td>
+                    <td>${user.token}</td>
+                    <td>${new Date(user.createdAt).toLocaleString()}</td>
+                    <td><button onclick="openLoanForm('${user.token}', '${user.lastname}', '${user.email}')">Add Loan</button></td>
+                </tr>`;
                     tableBody.innerHTML += row;
                 });
             } catch (error) {
-                console.error('Error fetching loans:', error);
-                document.getElementById('loansTable').innerHTML = '<tr><td colspan="6">Error loading data</td></tr>';
+                console.error('Error fetching users:', error);
+                document.getElementById('usersTable').innerHTML = '<tr><td colspan="7">Error loading data</td></tr>';
             }
         }
 
-        // Add a new loan
-        async function addLoan(event) {
+        async function addUser(event) {
             event.preventDefault();
             const ssn = document.getElementById('ssn').value;
             const lastname = document.getElementById('lastname').value;
@@ -202,10 +207,18 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to add loan');
+                    const errorData = await response.json();
+                    if (errorData.message === 'User already exists') {
+                        alert('User already exists in the database.');
+                    } else {
+                        throw new Error('Failed to add user');
+                    }
+                    return;
                 }
 
-                console.log('Success: Loan added successfully'); // Log success message
+                const { user, token } = await response.json();
+
+                console.log('Success: User added successfully');
 
                 // Clear form inputs
                 document.getElementById('ssn').value = '';
@@ -213,20 +226,25 @@
                 document.getElementById('email').value = '';
 
                 // Refresh the table
-                fetchLoans();
+                fetchUsers();
             } catch (error) {
-                console.error('Error adding loan:', error);
-                alert('Error adding loan. Please try again.');
+                console.error('Error adding user:', error);
+                alert('Error adding user. Please try again.');
             }
         }
 
-        // Attach event listeners
-        document.getElementById('loanForm').addEventListener('submit', addLoan);
+        document.getElementById('userForm').addEventListener('submit', addUser);
 
-        // Initial fetch and periodic refresh
-        fetchLoans();
-        setInterval(fetchLoans, 5000); // Refresh every 5 seconds
+        // Function to open the loan form in a new tab
+        function openLoanForm(token, lastname, email) {
+            const url = `http://localhost:3006/?token=${encodeURIComponent(token)}&name=${encodeURIComponent(lastname)}&email=${encodeURIComponent(email)}`;
+            window.open(url, '_blank');
+        }
+
+        fetchUsers();
+        setInterval(fetchUsers, 5000);
     </script>
+
 </body>
 
 </html>
