@@ -41,6 +41,11 @@ const isValidEmail = (email) => {
     return emailRegex.test(email);
 };
 
+const isValidFirstname = (firstname) => {
+    const nameRegex = /^[A-Za-z]+$/;
+    return nameRegex.test(firstname);
+};
+
 const isValidLastname = (lastname) => {
     const nameRegex = /^[A-Za-z]+$/;
     return nameRegex.test(lastname);
@@ -53,10 +58,14 @@ const isValidSSN = (ssn) => {
 
 // API Endpoints
 app.post('/api/users', (req, res) => {
-    const { ssn, lastname, email } = req.body;
+    const { ssn, firstname, lastname, email } = req.body;
 
     if (!isValidSSN(ssn)) {
         return res.status(400).json({ error: 'Invalid SSN. Must be exactly 4 digits.' });
+    }
+
+    if (!isValidFirstname(firstname)) {
+        return res.status(400).json({ error: 'Invalid firstname. Must contain only alphabetic characters.' });
     }
 
     if (!isValidLastname(lastname)) {
@@ -67,18 +76,21 @@ app.post('/api/users', (req, res) => {
         return res.status(400).json({ error: 'Invalid email. Must be a valid email address.' });
     }
 
-    const existingUser = users.find(user => user.ssn === ssn && user.lastname === lastname && user.email === email);
+    const existingUser = users.find(user => user.ssn === ssn && user.firstname === firstname && user.lastname === lastname && user.email === email);
 
     if (existingUser) {
         return res.status(409).json({ error: 'User already in system.' });
     }
 
     const token = generateToken();
+    const fullname = `${firstname} ${lastname}`;
 
     const user = {
         id: users.length + 1,
         ssn: ssn,
+        firstname: firstname,
         lastname: lastname,
+        fullname: fullname,
         email: email,
         token: token,
         createdAt: new Date()
@@ -88,7 +100,6 @@ app.post('/api/users', (req, res) => {
     writeUsersToFile(users); // Save to file
     res.status(201).json({ user, token });
 });
-
 
 app.get('/api/users', (req, res) => {
     res.json(users);
